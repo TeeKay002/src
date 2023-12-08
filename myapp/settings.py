@@ -125,5 +125,11 @@ LOGIN_URL = 'loginPage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# settings.py
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://quantumsphere.47to.xyz",
+    # Add other trusted origins if needed
+]
 
 
