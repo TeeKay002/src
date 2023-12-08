@@ -27,7 +27,7 @@ def loginPage(request):
         else:
             return HttpResponse('Error login')
     
-    return render(request, 'greetings/loginPage.html', {})
+    return render(request, 'greetings/loginpage.html', {})
 
 
 def register(request):
