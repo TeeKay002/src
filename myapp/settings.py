@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4suq&@wf866*brcdq@9u73th#8yvv#a#dtj#@e@k8^xcu1#w*f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['quantumsphere.47to.xyz']
 
 
 # Application definition
