@@ -53,6 +53,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myapp.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -119,6 +121,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 LOGIN_URL = 'loginPage'
+
+STATIC_ROOT = '/django-project/site/public/static'
+STATIC_ROOT = '/django-project/site/public/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
