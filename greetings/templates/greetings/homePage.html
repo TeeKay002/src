@@ -1,14 +1,16 @@
+<!-- your_templates/your_template.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello!!</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Your Page Title</title>
 </head>
 <body>
-    
-    <div style="text-align: center; background-color: #f2f2f2; padding: 20px;">
-        <h1 style="color: #333;">Hello {{ greeting }}!!!</h1>
+    <div class="center-content">
+        <h1 class="greeting-text">Hello {{ greeting }}!!!</h1>
     </div>
 </body>
 </html>
