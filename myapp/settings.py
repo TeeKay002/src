@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'myapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydb',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -123,7 +127,7 @@ STATIC_URL = 'static/'
 LOGIN_URL = 'loginPage'
 
 STATIC_ROOT = '/django-project/site/public/static'
-STATIC_ROOT = '/django-project/site/public/media'
+MEDIA_ROOT = '/django-project/site/public/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

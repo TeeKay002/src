@@ -32,11 +32,15 @@ def loginPage(request):
 
 def register(request):
     if request.method== 'POST':
-        userName = request.POST.get('userName')
+        username = request.POST.get('userName')
         password = request.POST.get('password')
 
-        new_user = User.object.Create_user(userName, password )
+        new_user = User.objects.create_user(username=username, password=password )
         new_user.save()
         return redirect('homePage')
     
     return render(request, 'greetings/register.html', {})
+
+def logout_user(request):
+    logout(request)
+    return redirect('loginPage')
