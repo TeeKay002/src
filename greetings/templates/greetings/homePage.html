@@ -43,8 +43,19 @@
 <body>
     <a href="{% url 'logout' %}">Logout</a>
     <div class="center-content">
-        <h1 class="greeting-text">Hello {{ greeting }}!!!</h1>
+        {% if username == 'Farai' %}
+            <h1 class="greeting-text">Moleqular Engineering Boss! madii!!!</h1>
+        {% elif username == 'Tanaka' %}
+            <h1 class="greeting-text">Photo Factory Boss! madii!!!</h1>
+        {% elif username == 'Rumbie' %}
+            <h1 class="greeting-text">VAhanzvadzi madii!!!</h1>
+        {% elif username == 'Una' %}
+            <h1 class="greeting-text">Hello babe!! I love you so much!!</h1>
+        {% else %}
+            <h1 class="greeting-text">Hello {{ username }}!!!</h1>
+        {% endif %}
     </div>
 </body>
+
 </html>
 

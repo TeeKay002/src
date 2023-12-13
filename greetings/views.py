@@ -10,8 +10,8 @@ from django.urls import reverse
     
 @login_required
 def homePage(request):
-    greeting = request.user.username
-    return render(request, 'greetings/homePage.html', {'greeting':greeting})
+    username = request.user.username
+    return render(request, 'greetings/homePage.html', {'username':username})
 
 
 def loginPage(request):
