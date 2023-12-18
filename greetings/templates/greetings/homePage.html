@@ -1,7 +1,6 @@
-<!-- your_templates/your_template.html -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -14,21 +13,42 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background: linear-gradient(to bottom, #87CEEB, white) no-repeat fixed; /* No repeat */
             color: #333;
+            display: flex;
+            flex-direction: column; /* Updated to column layout */
+            align-items: center; /* Center items horizontally */
+        }
+
+        /* Add styles for the navigation bar */
+        nav {
+            background: rgba(0, 123, 255, 0.3); /* More transparent */
+            padding: 10px;
+            text-align: center;
+            width: 100%; /* Take the full horizontal length */
+            border-right: 2px solid white;
+            box-sizing: border-box; /* Include padding and border in the width calculation */
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            display: inline-block;
         }
 
         .center-content {
             text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            padding: 20px;
+            width: 100%; /* Take the full horizontal length */
+            box-sizing: border-box; /* Include padding and border in the width calculation */
         }
 
         .greeting-text {
             font-size: 2em;
-            color: #007BFF;
+            color: rgba(0, 123, 255, 0.8); /* More transparent */
+            font-style: italic; /* Italic font style */
+            font-weight: 700; /* Bold */
         }
 
         a {
@@ -38,23 +58,46 @@
             color: #007BFF;
             font-weight: bold;
         }
+
+        /* Center the "Coming soon!!!" text */
+        .coming-soon-text {
+            text-align: center;
+            margin-top: 50px; /* Adjust the margin as needed */
+        }
     </style>
 </head>
+
 <body>
-    <a href="{% url 'logout' %}">Logout</a>
-    <div class="center-content">
+
+    <!-- Navigation bar -->
+    <nav>
+        <a href="{% url 'homePage' %}">Home</a>
+        <a href="{% url 'quiz:homePage' %}">Quiz</a>
+        <a href="{% url 'project_manager:homePage' %}">Project Manager</a>
+        <a href="{% url 'market:homePage' %}">Market</a>
+        <a href="{% url 'share_ideas:homePage' %}">Share Ideas</a>
+        <a href="{% url 'edu_res:homePage' %}">Education and Research</a>
+        <a href="{% url 'logout' %}">Logout</a>
+
         {% if username == 'Farai' %}
-            <h1 class="greeting-text">Moleqular Engineering Boss! madii!!!</h1>
+        <h1 class="greeting-text">Molecular Engineering Boss! madii!!!</h1>
         {% elif username == 'Tanaka' %}
-            <h1 class="greeting-text">Photo Factory Boss! madii!!!</h1>
+        <h1 class="greeting-text">Photo Factory Boss! madii!!!</h1>
         {% elif username == 'Rumbie' %}
-            <h1 class="greeting-text">VAhanzvadzi madii!!!</h1>
+        <h1 class="greeting-text">VAhanzvadzi madii!!!</h1>
         {% elif username == 'Una' %}
-            <h1 class="greeting-text">Hello babe!! I love you so much!!</h1>
+        <h1 class="greeting-text">Hello babe!! I love you so much!!</h1>
         {% else %}
-            <h1 class="greeting-text">Hello {{ username }}!!!</h1>
+        <h1 class="greeting-text">Hello {{ username }}!!!</h1>
         {% endif %}
+    </nav>
+
+    <!-- Content section -->
+
+    <div class="coming-soon-text">
+        <h1>Coming soon!!!</h1>
     </div>
+
 </body>
 
 </html>

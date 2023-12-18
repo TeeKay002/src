@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What's your name?</title>
+    <title>Login</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(to bottom, #87CEEB, white) no-repeat fixed;
+            color: #333;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
         }
 
+        h1 {
+            color: #007BFF;
+            margin-bottom: 10px;
+            font-size: 2em; /* Adjust font size */
+        }
+
         form {
-            background-color: #fff;
+            background-color: rgba(0, 123, 255, 0.3);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-top: 10px; /* Adjust margin from the heading */
+            text-align: center; /* Center text within the form */
         }
 
         label {
             display: block;
             margin-bottom: 8px;
+            color: white;
         }
 
         input {
@@ -38,7 +51,7 @@
         }
 
         button {
-            background-color: #4caf50;
+            background-color: #007BFF;
             color: #fff;
             padding: 10px;
             border: none;
@@ -47,25 +60,28 @@
         }
 
         a {
-            color: #4caf50;
+            color: #007BFF;
             text-decoration: none;
             margin-top: 10px;
             display: inline-block;
         }
     </style>
 </head>
+
 <body>
+    <h1>Login here </h1>
     <form action="" method="POST">
         {% csrf_token %}
 
         <label for="userName">User Name: </label>
         <input type="text" placeholder="Your user name" name="userName">
-        
+
         <label for="password">Password: </label>
         <input type="password" placeholder="Your password" name="password">
-        
+
         <button type="submit">Submit</button>
         <a href="{% url 'register' %}">Register</a>
     </form>
 </body>
+
 </html>
