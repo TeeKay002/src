@@ -1,0 +1,13 @@
+/* static/css/style.css */
+
+/* Center the content and set the background color to blue */
+div.center-content {
+    text-align: center;
+    background-color: #3498db;
+    padding: 20px;
+}
+
+/* Style the heading text color */
+h1.greeting-text {
+    color: #333;
+}
