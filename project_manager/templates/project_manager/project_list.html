@@ -1,0 +1,21 @@
+<!-- anotherapp/templates/anotherapp/page.html -->
+{% extends "greetings/base.html" %}
+
+{% block title %}Another App - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <!-- project_list.html -->
+    <h2>Project List</h2>
+
+    {% if projects %}
+        <ul>
+            {% for project in projects %}
+                <li><a href="{% url 'project_manager:project_detail' project.id %}">{{ project.name }}</a> - {{ project.status }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No projects found.</p>
+    {% endif %}
+
+    <a href="{% url 'project_manager:project_create' %}"><button>Add Project</button></a>
+{% endblock %}

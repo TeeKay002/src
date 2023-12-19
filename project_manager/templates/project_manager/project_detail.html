@@ -1,0 +1,101 @@
+<!-- anotherapp/templates/anotherapp/page.html -->
+
+{% extends "greetings/base.html" %}
+
+{% load custom_filters %}  <!-- Correct import statement -->
+
+{% block title %}Another App - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <!-- Include the CSS styles -->
+    <style>
+        .progress-tracker {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+
+        .progress-tracker li {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-tracker li:not(:last-child):after {
+            content: "";
+            height: 2px;
+            width: 100%;
+            background-color: #ccc;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .progress-tracker li.current {
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- project_detail.html -->
+    <h3>Progress Tracker</h3>
+{% if stage_with_timestamp %}
+    <ul class="progress-tracker">
+        {% for stage in stage_with_timestamp %}
+            <li {% if stage.stage == project.status %}class="current"{% endif %}>
+                <input type="radio" {% if stage.stage == project.status %}checked{% endif %} disabled>
+                {{ stage.stage }} ({{ stage.timestamp|date:"Y-m-d H:i:s" }})
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No stage changes recorded for this project.</p>
+{% endif %}
+
+    <!-- ... (rest of your template) ... -->
+
+
+  
+       <!-- project_detail.html -->
+<h2>{{ project.name }}</h2>
+<p>{{ project.description }}</p>
+<p>Start Date: {{ project.start_date }}</p>
+<p>End Date: {{ project.end_date }}</p>
+<p>Status: {{ project.status }}</p>
+
+{% if project.file_upload %}
+    <p>File: <a href="{{ project.file_upload.url }}">{{ project.file_upload.name }}</a></p>
+{% endif %}
+
+<h3>Comments</h3>
+<ul>
+    {% for comment in comments %}
+        <li>{{ comment.user.username }}: {{ comment.text }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Tasks</h3>
+<ul>
+    {% for task in tasks %}
+        <li>{% if task.completed %}<s>{% endif %}{{ task.description }}{% if task.completed %}</s>{% endif %}</li>
+    {% endfor %}
+</ul>
+
+<!-- project_detail.html -->
+<h3>Financial Information</h3>
+<p>Need Money: {{ project.need_money }}</p>
+<p>Amount Needed: {{ project.amount_needed|default:0.0 }}</p>
+<p>Already Paid: {{ project.already_paid|default:0.0 }}</p>
+<p>Balance: {{ balance }}</p>
+
+
+<h3>User Activities</h3>
+<ul>
+    {% for activity in activities %}
+        <li>{{ activity.user.username }} {{ activity.activity_type }} at {{ activity.timestamp }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'project_manager:add_update' project.id %}" class="btn btn-primary">Add Update</a>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+<!-- anotherapp/templates/anotherapp/page.html -->
+
+{% extends "greetings/base.html" %}
+
+{% block title %}Another App - {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- project_create.html -->
+<h2>Create Project</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Project</button>
+</form>
+
+
+{% endblock %}
