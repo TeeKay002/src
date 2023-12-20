@@ -46,11 +46,13 @@ def project_detail(request, project_id):
     # Iterate through updates and append relevant information
     for update in project.updates.all():  # Use the related name 'updates'
         stage_with_timestamp.append({
+            'user': update.user,  # Use the user from the update object
             'stage': update.status,
             'timestamp': update.timestamp,
             'amount_paid': update.amount_paid,
             'description': update.description,
-        })
+    })
+
 
     return render(request, 'project_manager/project_detail.html', {
         'project': project,
@@ -59,6 +61,7 @@ def project_detail(request, project_id):
         'stages': stages,
         'balance': balance,
         'stage_with_timestamp': stage_with_timestamp,
+        'user': project.user,
     })
 
 
@@ -81,6 +84,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import Project
 from .forms import UpdateForm  # Assuming you have a form for handling updates
 
+@login_required
 def add_update(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
@@ -89,7 +93,16 @@ def add_update(request, project_id):
         if form.is_valid():
             new_update = form.save(commit=False)
             new_update.project = project
+            new_update.user = request.user  # Set the user field to the current user
+
+            # Update project status and description
+            project.status = new_update.status
+            project.description = new_update.description
+
             new_update.save()
+            project.already_paid += new_update.amount_paid
+            project.save()
+
             return redirect('project_manager:project_detail', project_id=project.id)
     else:
         form = UpdateForm()

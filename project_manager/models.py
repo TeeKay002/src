@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Project(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
     start_date = models.DateField()
@@ -35,12 +36,13 @@ class UserActivity(models.Model):
 
 
 class Update(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='updates')
     status = models.CharField(max_length=255)  # Assuming 'status' is the radio stage
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    
 
     def __str__(self):
         return f'Update for {self.project.name} - {self.timestamp}'

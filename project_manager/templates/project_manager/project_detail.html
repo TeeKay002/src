@@ -2,13 +2,22 @@
 
 {% extends "greetings/base.html" %}
 
-{% load custom_filters %}  <!-- Correct import statement -->
+{% load custom_filters %}  <!-- Correct import statement %}
 
 {% block title %}Another App - {{ block.super }}{% endblock %}
 
 {% block content %}
     <!-- Include the CSS styles -->
     <style>
+        .container {
+            text-align: center; /* Center the content */
+        }
+
+        .progress-container {
+            width: 100%;
+            overflow-x: auto; /* Allow horizontal scrolling */
+        }
+
         .progress-tracker {
             list-style: none;
             padding: 0;
@@ -16,7 +25,7 @@
         }
 
         .progress-tracker li {
-            flex: 1;
+            flex: 0 0 auto; /* Set the desired width (adjust as needed) */
             text-align: center;
             position: relative;
         }
@@ -35,59 +44,122 @@
         .progress-tracker li.current {
             font-weight: bold;
         }
+
+       /* Add this style to your existing style block or in a separate CSS file */
+    .scrollable-box {
+        max-height: 120px; /* Set the desired height */
+        overflow-y: auto;
+        border: 1px solid #ccc; /* Add a border */
+    }
+
+    .scroll-container {
+        padding: 5px; /* Add padding for better appearance */
+    }
+
+    .scrollable-box ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .scrollable-box li {
+        border-bottom: 1px solid #eee; /* Add a border between list items */
+        padding: 5px;
+        margin: 0;
+    }
+
+    /* Add this style to your existing style block or in a separate CSS file */
+    .financial-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px; /* Add margin between financial container and the next element */
+        flex-wrap: wrap; /* Allow items to wrap to the next row if there's not enough space */
+    }
+
+    .financial-item {
+        width: 49%; /* Adjust width */
+        box-sizing: border-box;
+        margin-bottom: 5px; /* Add a small margin between items for better spacing */
+    }
+
+    @media (max-width: 767px) {
+        /* Adjust styles for screens smaller than 768px (e.g., mobile devices) */
+        .financial-item {
+            width: 100%; /* Make items take up the full width on smaller screens */
+        }
+    }
     </style>
 
     <!-- project_detail.html -->
-    <h3>Progress Tracker</h3>
-{% if stage_with_timestamp %}
-    <ul class="progress-tracker">
-        {% for stage in stage_with_timestamp %}
-            <li {% if stage.stage == project.status %}class="current"{% endif %}>
-                <input type="radio" {% if stage.stage == project.status %}checked{% endif %} disabled>
-                {{ stage.stage }} ({{ stage.timestamp|date:"Y-m-d H:i:s" }})
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No stage changes recorded for this project.</p>
-{% endif %}
+    
+    <div class="container">
+        <h1>{{ project.name }}</h1>
+        <div class="progress-container">
+            <ul class="progress-tracker">
+                {% for stage in stage_with_timestamp %}
+                    <li {% if stage.stage == project.status %}class="current"{% endif %}>
+                        <input type="radio" {% if stage.stage == project.status %}checked{% endif %} disabled>
+                        {{ stage.stage }} ({{ stage.timestamp|date:"Y-m-d H:i:s" }})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
     <!-- ... (rest of your template) ... -->
+    <h2>Leatest updates</h2>
+    <div class="scrollable-box">
+        <div class="scroll-container">
+            <ul>
+                {% for update in project.updates.all|reverse_order %}
+    <li>
+        <strong>{{ update.user.username }}</strong> updated the project status to <strong>{{ update.status }}</strong>
+        on {{ update.timestamp|date:"Y-m-d H:i:s" }}. Amount Paid: {{ update.amount_paid|default:0.0 }}.
+        <br>
+        <em>{{ update.description }}</em>
 
+        <!-- Add a link or button to show more details -->
+        <a href="#detailsContainer{{ update.id }}">Show Details</a>
+
+        <!-- Details container initially hidden -->
+        <div class="details-container" id="detailsContainer{{ update.id }}">
+            <!-- Display more details here, e.g., update.timestamp, update.amount_paid, etc. -->
+            <p>Timestamp: {{ update.timestamp|date:"Y-m-d H:i:s" }}</p>
+            <p>Amount Paid: {{ update.amount_paid|default:0.0 }}</p>
+            <!-- Add more details as needed -->
+        </div>
+    </li>
+{% endfor %}
+            </ul>
+        </div>
+    </div>
 
   
        <!-- project_detail.html -->
-<h2>{{ project.name }}</h2>
-<p>{{ project.description }}</p>
-<p>Start Date: {{ project.start_date }}</p>
-<p>End Date: {{ project.end_date }}</p>
-<p>Status: {{ project.status }}</p>
-
-{% if project.file_upload %}
-    <p>File: <a href="{{ project.file_upload.url }}">{{ project.file_upload.name }}</a></p>
-{% endif %}
-
-<h3>Comments</h3>
-<ul>
-    {% for comment in comments %}
-        <li>{{ comment.user.username }}: {{ comment.text }}</li>
-    {% endfor %}
-</ul>
-
-<h3>Tasks</h3>
-<ul>
-    {% for task in tasks %}
-        <li>{% if task.completed %}<s>{% endif %}{{ task.description }}{% if task.completed %}</s>{% endif %}</li>
-    {% endfor %}
-</ul>
-
 <!-- project_detail.html -->
-<h3>Financial Information</h3>
-<p>Need Money: {{ project.need_money }}</p>
-<p>Amount Needed: {{ project.amount_needed|default:0.0 }}</p>
-<p>Already Paid: {{ project.already_paid|default:0.0 }}</p>
-<p>Balance: {{ balance }}</p>
 
+
+
+<!-- ... (rest of your template) ... -->
+
+<!-- Latest Updates in Scrollable Box -->
+
+
+<h3>Project Information</h3>
+<div class="financial-container">
+    <div class="financial-item">
+        <p>Need Money: {{ project.need_money }}</p>
+        <p>Amount Needed: {{ project.amount_needed|default:0.0 }}</p>
+        <p>Description: {{ project.description }}</p>
+        <p>Start Date: {{ project.start_date }}</p>
+    </div>
+    <div class="financial-item">
+        <p>Already Paid: {{ project.already_paid|default:0.0 }}</p>
+        <p>Balance: {{ balance }}</p>
+        <p>Status: {{ project.status }}</p>
+        <p>Date Last Modified: {{ project.updates.last.timestamp|date:"Y-m-d H:i:s" }}</p>
+        <!-- Assuming 'updates' is a related name for the Update model in Project -->
+    </div>
+</div>
 
 <h3>User Activities</h3>
 <ul>
@@ -99,3 +171,4 @@
 <a href="{% url 'project_manager:add_update' project.id %}" class="btn btn-primary">Add Update</a>
 
 {% endblock %}
+
