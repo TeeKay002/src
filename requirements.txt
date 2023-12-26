@@ -2,7 +2,9 @@ asgiref==3.7.2
 certifi==2023.7.22
 distlib==0.3.7
 Django==5.0
+django-phonenumber-field==7.2.0
 filelock==3.12.3
+phonenumbers==8.13.27
 pipenv==2023.9.1
 platformdirs==3.10.0
 psycopg2-binary==2.9.9
