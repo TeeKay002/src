@@ -1,0 +1,78 @@
+<!-- accounts/templates/Accounts/user_details.html -->
+{% extends 'greetings/base.html' %}
+
+{% block content %}
+<style>
+  /* Add futuristic styles to the user details */
+  .user-details-container {
+    margin-top: 20px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+  }
+
+  /* Add styles for buttons */
+  .edit-button,
+  .back-button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+
+  /* Add styles for the form in the edit page */
+  .edit-form {
+    margin-top: 20px;
+  }
+
+  /* Add styles for form fields */
+  .edit-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: linear-gradient(to right, #87CEEB, #800080);
+    color: #000;
+    outline: none;
+  }
+</style>
+
+<div class="user-details-container">
+  <h2>User Details</h2>
+  <p><strong>Username:</strong> {{ user_profile.user.username }}</p>
+  <p><strong>Email:</strong> {{ user_profile.user.email }}</p>
+  <p><strong>Phone Number:</strong> {{ user_profile.phone_number }}</p>
+  <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth }}</p>
+  <p><strong>Gender:</strong> {{ user_profile.get_gender_display }}</p>
+
+  <!-- Add buttons for actions -->
+  <a href="{% url 'Accounts:edit_user' %}?user_id={{ user_profile.user.id }}">
+    <button class="edit-button">Edit</button>
+  </a>
+  <a href="{% url 'Accounts:homePage' %}">
+    <button class="back-button">Back to User List</button>
+  </a>
+</div>
+
+<!-- Form for editing user details -->
+<div class="edit-form">
+  <h2>Edit User</h2>
+  <form method="post" action="{% url 'Accounts:edit_user' %}?user_id={{ user_profile.user.id }}">
+    {% csrf_token %}
+    <label for="email">Email:</label>
+    <input type="email" name="email" value="{{ user_profile.user.email }}" required>
+    <!-- Add other fields as needed (phone number, date of birth, gender) -->
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,22 @@
+{% extends 'greetings/base.html' %}
+
+{% block content %}
+
+<h2>User Registration</h2>
+<form method="post" enctype="multipart/form-data" class="registration-form">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    
+    <!-- Style the gender choice -->
+    <label for="{{ profile_form.gender.id_for_label }}">Gender:</label>
+    <select name="{{ profile_form.gender.name }}">
+        {% for value, label in profile_form.gender.choices %}
+            <option value="{{ value }}">{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    {{ profile_form.as_p }}
+    <button type="submit">Register</button>
+</form>
+{% endblock %}
+

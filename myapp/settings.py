@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-4suq&@wf866*brcdq@9u73th#8yvv#a#dtj#@e@k8^xcu1#w*f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+
+
 ALLOWED_HOSTS = ['quantumsphere.47to.xyz', '127.0.0.1']
 
 
@@ -44,6 +47,9 @@ INSTALLED_APPS = [
     'project_manager',
     'quiz',
     'share_ideas',
+    'chat',
+    'settings',
+    'Accounts',
 ]
 
 MIDDLEWARE = [

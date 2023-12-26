@@ -1,0 +1,74 @@
+<!-- accounts/templates/Accounts/user_profile_list.html -->
+{% extends 'greetings/base.html' %}
+
+{% block content %}
+<style>
+    /* Add futuristic styles to the user profile table */
+    .user-profile-table-container {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+
+    .user-profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .user-profile-table th, .user-profile-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .user-profile-table th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .user-profile-table tbody tr:hover {
+      background-color: #f5f5f5;
+      transition: background-color 0.3s;
+    }
+
+    /* Add cursor pointer to indicate clickable rows */
+    .user-profile-table tbody tr {
+      cursor: pointer;
+    }
+</style>
+
+<h2>User Profile List</h2>
+<a href="{% url 'Accounts:register_user' %}"><button>Create New User</button></a>
+
+<!-- Add a button to link to the group list page -->
+<a href="{% url 'Accounts:group_list' %}"><button>Group List</button></a>
+
+<div class="user-profile-table-container">
+  <table class="user-profile-table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user_profile in user_profiles %}
+      <tr style="cursor: pointer;" onclick="window.location.href='{% url 'Accounts:user_detail' user_profile.user.id %}'">
+          <!-- Link each user's data to their detail page -->
+          <td>{{ user_profile.user.username }}</td>
+          <td>{{ user_profile.email }}</td>
+          <td>{{ user_profile.phone_number }}</td>
+          <td>{{ user_profile.date_of_birth }}</td>
+          <td>{{ user_profile.get_gender_display }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

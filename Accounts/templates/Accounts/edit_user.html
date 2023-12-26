@@ -1,0 +1,18 @@
+<!-- accounts/templates/Accounts/edit_user.html -->
+{% extends 'greetings/base.html' %}
+
+{% block content %}
+  <h2>Edit User Profile</h2>
+  
+  <form method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    
+    <hr>
+    
+    <h3>Change Password</h3>
+    {{ password_form.as_p }}
+
+    <button type="submit">Save Changes</button>
+  </form>
+{% endblock %}

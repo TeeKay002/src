@@ -25,4 +25,7 @@ urlpatterns = [
     path('project_manager/', include('project_manager.urls')),
     path('quiz/', include('quiz.urls')),
     path('share_ideas/', include('share_ideas.urls')),
+    path('accounts/', include('Accounts.urls')),
+    path('chat/', include('chat.urls')),
+    path('settings/', include('settings.urls')),
 ]
