@@ -1,0 +1,191 @@
+{% extends "greetings/base.html" %}
+
+{% block title %}Chat Room - {{ room_name }}{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a2e;
+            color: #e5e5e5;
+            text-align: center;
+        }
+        #chat-log {
+            width: 80%;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #4ecca3;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #E0FFFF;
+            margin-bottom: 20px;
+        }
+        #chat-message-input {
+            width: 70%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        #chat-message-submit {
+            width: 15%;
+            padding: 10px;
+            border: none;
+            background-color: #4ecca3;
+            color: #1a1a2e;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #chat-message-submit:hover {
+            background-color: #3cb371;
+        }
+
+        .message-bubble {
+        background-color: #f8f8f8; /* Off-white background for message bubble */
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        max-width: 80%;
+        color: black; /* Black text color */
+        width: 100%; /* Fill the container width */
+        margin-left: 10px; /* Small margin on the left */
+        margin-right: 10px; /* Small margin on the right */
+        }
+
+        .my-message {
+            background-color: #f8f8f8; /* Off-white background for user's own messages */
+            margin-left: auto; /* Align to the right */
+        }
+
+        .other-message {
+            background-color: #f8f8f8; /* Off-white background for other's messages */
+            margin-right: auto; /* Align to the left */
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        .message-info {
+            align-self: flex-end;
+            font-size: 0.7em; /* Smaller font size for timestamp */
+            opacity: 0.6; /* Lighter color for timestamp */
+        }
+
+        .message-username {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .my-message .message-username {
+            align-self: flex-end; /* Align username to right for user's messages */
+        }
+
+        .other-message .message-username {
+            align-self: flex-start; /* Align username to left for other's messages */
+        }
+
+        .message-content, .message-info {
+            text-align: left; /* Align text to the left by default */
+        }
+
+        .my-message .message-content, .my-message .message-info {
+            text-align: right; /* Align text to the right for user's own messages */
+        }
+</style>
+    </style>
+
+    <h2>Chat Room: {{ room_name }}</h2>
+    <div id="chat-log"></div>
+    <input id="chat-message-input" type="text" size="100" placeholder="Type your message here...">
+    <button id="chat-message-submit">Send</button>
+
+    {{ json_messages|json_script:"json-messages" }}
+
+    <script type="text/javascript">
+        var userId = "{{ user_id }}";
+        const roomName = "{{ room_name }}";
+        const chatSocket = new WebSocket(
+            (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws/chat/' + roomName + '/'
+        );
+    
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            displayMessage(data, true);
+            scrollToBottom();
+        };
+    
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+    
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({'message': message, 'author_id': userId}));
+            messageInputDom.value = '';
+            scrollToBottom();
+        };
+    
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // Enter key
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+    
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const existingMessages = JSON.parse(JSON.parse(document.getElementById('json-messages').textContent));
+            existingMessages.forEach((data) => {
+                displayMessage(data, false);
+            });
+            scrollToBottom();
+        });
+    
+        function displayMessage(data, isRealTime) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-bubble');
+            const messageUsername = document.createElement('p');
+            messageUsername.classList.add('message-username');
+            const messageContent = document.createElement('p');
+            messageContent.classList.add('message-content');
+            const messageInfo = document.createElement('p');
+            messageInfo.classList.add('message-info');
+    
+            messageUsername.textContent = data.username;
+            messageContent.textContent = data.message;
+    
+            // Handle the timestamp
+            let timestamp;
+            if (isRealTime) {
+                timestamp = new Date().toLocaleTimeString();
+            } else {
+                // Ensure the date is parsed correctly
+                const date = new Date(data.timestamp);
+                timestamp = date.toLocaleString();
+            }
+            messageInfo.textContent = timestamp;
+    
+            if (data.author_id == userId) {
+                messageElement.classList.add('my-message');
+            } else {
+                messageElement.classList.add('other-message');
+            }
+    
+            messageElement.appendChild(messageUsername);
+            messageElement.appendChild(messageContent);
+            messageElement.appendChild(messageInfo);
+            document.querySelector('#chat-log').appendChild(messageElement);
+        }
+    
+        function scrollToBottom() {
+            const chatLog = document.querySelector('#chat-log');
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+    </script>
+    
+    
+    
+    
+{% endblock %}
+

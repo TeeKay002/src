@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['quantumsphere.47to.xyz', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +51,15 @@ INSTALLED_APPS = [
     'chat',
     'settings',
     'Accounts',
+    'guardian',
 ]
+
+# myapp/settings.py
+
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,6 +95,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'myapp.wsgi.application'
 
 
+
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -118,6 +129,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# settings.py
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Add this line
+    'guardian.backends.ObjectPermissionBackend',  # Add this line
+)
+
+# Other settings...
 
 
 # Internationalization
@@ -159,3 +179,17 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+
+ASGI_APPLICATION = 'myapp.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+

@@ -1,33 +1,42 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render, redirect
+from email.headerregistry import Group
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-
-# Create your views here.
-
-    
-
-# views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Project, Comment, Task, UserActivity, Update
 from .forms import ProjectForm, UpdateForm
+from guardian.shortcuts import get_objects_for_user
+from project_manager.models import Project  # Adjust this import based on your project structure
+from guardian.shortcuts import assign_perm
+from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import PermissionRequiredMixin
+from .models import UserProfile, CustomGroup
+from django.utils import timezone
 
+
+
+
+@login_required
 def project_list(request):
-    projects = Project.objects.all()
+    # Retrieve projects for which the user has view permission
+    projects = get_objects_for_user(
+        request.user,
+        'view_project',
+        klass=Project,
+        accept_global_perms=False,
+        with_superuser=False
+    )
+
+    print("User:", request.user)
+    print("Projects:", projects)
+
     return render(request, 'project_manager/project_list.html', {'projects': projects})
 
-from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404
-from .models import Project, Comment, Task, UserActivity
 
+@login_required
 def project_detail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
+    PermissionRequiredMixin().check_object_permissions(request, project)
     comments = Comment.objects.filter(project=project)
     tasks = Task.objects.filter(project=project)
     activities = UserActivity.objects.filter(project=project)
@@ -66,23 +75,46 @@ def project_detail(request, project_id):
 
 
 
-
+@login_required
 def project_create(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             project = form.save()
-            UserActivity.objects.create(user=request.user, project=project, activity_type='created')
+
+            # Retrieve the UserProfile for the current user
+            try:
+                user_profile = UserProfile.objects.get(user=request.user)
+
+                # Create UserActivity associated with UserProfile
+                UserActivity.objects.create(user=user_profile.user, project=project, activity_type='created')
+
+                # Create or retrieve CustomGroup and set created_by and created_at
+                group_name = f"{project.name}"
+                group, created = CustomGroup.objects.get_or_create(name=group_name)
+                group.creator = user_profile
+                group.created_by = user_profile.user  # Assuming created_by is a User field
+                group.created_at = timezone.now()
+                group.save()
+
+                # Add the creator to the group and grant additional permissions
+                group.user_set.add(request.user)
+                assign_perm('change_project', request.user, project)
+                assign_perm('delete_project', request.user, project)
+
+            except UserProfile.DoesNotExist:
+                # Handle the case where UserProfile does not exist for the user
+                # You might want to create a UserProfile instance here or handle it based on your requirements
+                pass
+
             return redirect('project_manager:project_list')
+
     else:
         form = ProjectForm()
+
     return render(request, 'project_manager/project_create.html', {'form': form})
 
 
-# project_manager/views.py
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import Project
-from .forms import UpdateForm  # Assuming you have a form for handling updates
 
 @login_required
 def add_update(request, project_id):

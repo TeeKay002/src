@@ -104,6 +104,10 @@ def create_group(request):
             group.created_by = request.user
             group.save()
             form.save_m2m()  # Save any many-to-many relationships
+
+            # Add the group creator to the group
+            group.user_set.add(request.user)
+
             return redirect('Accounts:group_list')
     else:
         form = GroupCreationForm()
